@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+	<title>CGIS@GaTech</title>
+    <meta charset="utf-8">
+	
+	<!-- Saying that the width of the user screen (viewport) becomes Device Width with no zooming in/out of elements. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+	
+	<!-- jQuery -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	
+	<!-- Reset CSS -->
+	<link rel="stylesheet" href="reset.css">
+		
+	<!--Bootstrap CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	
+	<!-- My CSS -->
+	<link rel="stylesheet" href="main.css">	
+	
+	<!--Bootstrap: Latest compiled and minified JavaScript -->
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+	<!-- Math.js -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/3.13.3/math.min.js"></script>
+	
+	<!-- D3.js -->
+	<script src="https://d3js.org/d3.v4.min.js"></script>
+	
+	<!-- My JS -->
+	<script src="script.js"></script>
+	
+</head>
+
+<body onload="onloadAffairs()" onresize="onresizeAffairs()" id="myFullBody">
+
+	<nav class="navbar navbar-inverse navbar-fixed-top" id="myNavBar">
+		<div class="container-fluid">
+			
+			<!-- Logo -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myMenuList">
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a href="#" class="navbar-brand">CGIS@GaTech</a>
+			</div>
+			
+			<!-- Menu Items -->
+			<div class="collapse navbar-collapse" id="myMenuList">
+				<!-- Main Menu -->
+				<ul class="nav navbar-nav">
+					<li><a href="#">About Us</a></li>
+					<li><a href="#">Methodology</a></li>
+					<li class="active dropdown"> <!-- Drop Down Menu Item -->
+						<a class="dropdown-toggle" data-toggle="dropdown" href="#">Analysis <span class="caret"></span></a>
+						<ul class="dropdown-menu">
+							<li class="active"><a href="#">Analysis I</a></li>
+							<li><a href="#">Analysis II</a></li>
+							<li><a href="#">Analysis III</a></li>
+						</ul>
+					</li>
+					<li><a href="#">Contact</a></li>
+				</ul>
+				<!-- Right Side Menu -->
+				<ul class="nav navbar-nav navbar-right">
+					<li><a href="#">Log In</a></li>
+					<li><a href="#">Log Out</a></li>
+				</ul>
+			</div>
+			
+		</div>
+	</nav>
+
+	<div class="container" id="myContentBody">
+	    
+		<div> <!-- Div containing Premise -->
+			<img src="pana.jpg">
+			<p><strong>Premise:</strong> Analysis Based on Oregon Data. <strong>Here, we are evaluating X-Scores of different counties in Oregon on the fly.</strong> In accumsan arcu sed tortor interdum efficitur. Aliquam et lacus auctor, sagittis elit eget, pretium velit. Sed sit amet elit eu mi aliquet eleifend. Cras euismod mauris hendrerit nibh tempus mattis. Pellentesque vestibulum, elit eu ullamcorper mattis, nisi diam aliquam orci, eu pulvinar nulla quam vel dui. Nulla vehicula, mi ac placerat eleifend, nibh purus pulvinar quam, eget placerat eros augue ut purus. Vestibulum lorem diam, condimentum id tortor mollis, rutrum varius metus. Cras quis luctus lectus. Curabitur id risus purus. Suspendisse dictum, mi in auctor gravida, tortor mauris condimentum eros, sed pharetra nulla velit id velit. Ut sed efficitur velit. Aliquam erat volutpat.</p>
+			<br>
+			<h4 class="text-center"><b>X-Score Parameters <span class="glyphicon glyphicon-th-large"></span></b></h4>
+			<div class="myJumbotron">
+					<div class="col-md-4 col-sm-4 col-xs-4">
+						<p class="text-center MenInBlues"><strong>Heal<span class="hidden-xs">th</span></strong></p>
+						<img src="hospi.png" alt="Health" class="img-responsive center-block">
+						<p class="text-center MenInBlack"><strong>#Hospi<span class="hidden-xs">tals</span></strong></p>
+					</div>
+					<div class="col-md-4 col-sm-4 col-xs-4">
+						<p class="text-center MenInBlues"><strong>Edu<span class="hidden-xs">cation</span></strong></p>
+						<img src="school.png" alt="Education" class="img-responsive center-block">
+						<p class="text-center MenInBlack"><strong>#School<span class="hidden-xs">s</span></strong></p>
+					</div>
+					<div class="col-md-4 col-sm-4 col-xs-4">
+						<p class="text-center MenInBlues"><strong>Employ<span class="hidden-xs">ment</span></strong></p>
+						<img src="job.png" alt="Employment" class="img-responsive center-block">
+						<p class="text-center MenInBlack"><strong>#Cities</strong></p>
+					</div>
+			</div>
+		</div>
+		
+		<p class="spaceAdder">.</p>
+		
+		<div> <!-- Div containing Formulae -->
+			<h4 class="text-center"><b>Methodology <span class="glyphicon glyphicon-book"></span></b></h4>
+			<p class="bg-info text-center myMethodoBox">
+				<strong>X-Score</strong> := Weighted Mean of A,B,C, s.t., <span id="myEquation"><strong>X-Score = w<sub>1</sub>*A + w<sub>2</sub>*B + w<sub>3</sub>*C</strong></span> where, <span id="myEquation"><strong>0.0 <= w<sub>1</sub>, w<sub>2</sub>, w<sub>3</sub> <= 1.0</strong></span>, and, <span id="myEquation"><strong>w<sub>1</sub> + w<sub>2</sub> + w<sub>3</sub> = 1.0</strong></span>
+			</p>
+		</div>
+		
+		<p class="spaceAdder">.</p>
+		
+		<div id="myMapArea">
+			<h4 class="text-center"><b>Oregon Counties <span class="glyphicon glyphicon-map-marker"></span></b></h4>
+			<div id="myMap">
+			</div>
+		</div>
+		
+		<p class="spaceAdder">.</p>
+		
+		<div id="myTable"> <!-- Div containing Rank Table -->
+			<h4 class="text-center"><b>Results <span class="glyphicon glyphicon-list-alt"></b></h4>
+			<table class="table table-striped">
+				<thead>
+					<tr>
+						<th colspan="2">Counties with Highest Scores</th>
+						<th colspan="2">Counties with Lowest Scores</th>
+					</tr>
+					<tr>
+						<th>County</th>
+						<th>Score</th>
+						<th>County</th>
+						<th>Score</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td id="NameEntry0">N/A</td>
+						<td id="ScoreEntry0">N/A</td>
+						<td id="NameEntry1000">N/A</td>
+						<td id="ScoreEntry1000">N/A</td>
+					</tr>
+					<tr>
+						<td id="NameEntry1">N/A</td>
+						<td id="ScoreEntry1">N/A</td>
+						<td id="NameEntry999">N/A</td>
+						<td id="ScoreEntry999">N/A</td>
+					</tr>
+					<tr>
+						<td id="NameEntry2">N/A</td>
+						<td id="ScoreEntry2">N/A</td>
+						<td id="NameEntry998">N/A</td>
+						<td id="ScoreEntry998">N/A</td>
+					</tr>
+					<tr>
+						<td id="NameEntry3">N/A</td>
+						<td id="ScoreEntry3">N/A</td>
+						<td id="NameEntry997">N/A</td>
+						<td id="ScoreEntry997">N/A</td>
+					</tr>
+					<tr>
+						<td id="NameEntry4">N/A</td>
+						<td id="ScoreEntry4">N/A</td>
+						<td id="NameEntry996">N/A</td>
+						<td id="ScoreEntry996">N/A</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		
+		<p class="spaceAdder">.</p>
+		
+		<div id="myConsole">
+		
+			<h4 class="text-center"><b>Console <span class="glyphicon glyphicon-dashboard"></span></b></h4>
+			<table class="table">
+				<thead>
+					<tr>
+						<th>Parameter</th>
+						<th colspan="2">Controls</th>
+						<th>Weight %</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>Health</td>
+						<td colspan="2"><input type="range" min="0" max="100.0" value="0.0" id="myHealthBar" step="0.01" onchange="updateWeight('myHealthBar','myHealthBox')"/></td>
+						<td><input type ="number" class="form-control" value="0" id="myHealthBox" class="myBox" size="6" maxlength="6" onkeypress="updateWeight('myHealthBox','myHealthBar')"></td>
+					</tr>
+					<tr>
+						<td>Education</td>
+						<td colspan="2"><input type="range" min="0" max="100" value="0.0" id="myEduBar" step="0.01" onchange="updateWeight('myEduBar','myEduBox')"/></td>
+						<td><input type ="number" class="form-control" value="0" id="myEduBox" class="myBox" size="6" maxlength="6" onkeypress="updateWeight('myEduBox','myEduBar')"></td>
+					</tr>
+					<tr>
+						<td>Employment</td>
+						<td colspan="2"><input type="range" min="0" max="100" value="0.0" id="myEmployBar" step="0.01" onchange="updateWeight('myEmployBar','myEmployBox')"/></td>
+						<td><input type ="number" class="form-control" value="0" id="myEmployBox" class="myBox" size="6" maxlength="6" onkeypress="updateWeight('myEmployBox','myEmployBar')"></td>
+					</tr>
+					<tr>
+						<td><button type="button" class="btn btn-info" onclick="myReset()"><span class="hidden-xs">Reset</span> <span class="glyphicon glyphicon-refresh"></span></button></td>
+						<td><button type="button" class="btn btn-info" onclick="ResultsUpdate()"><span class="hidden-xs">Run</span> <span class="glyphicon glyphicon-play"></span></button></td>
+						<td><button type="button" class="btn btn-info"><span class="hidden-xs">Export</span> <span class="glyphicon glyphicon-download-alt"></span></button></td>
+						<td><button type="button" class="btn btn-info"><span class="hidden-xs">Share</span> <span class="glyphicon glyphicon-cloud"></button></td>
+					</tr>
+				</tbody>
+			</table>	
+		</div>	
+		
+	</div>
+
+</body>
