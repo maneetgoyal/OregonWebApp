@@ -41,6 +41,7 @@ function myReadJSON(FileName){
 			console.log(myData);
 			var myData2 = myData.features; // Array containing all features along with their info.
 			extractedMatrix = exTracter(myData2); // To generate a matrix (array of arrays) containing feature id and corresponding number of schools, hospitals and major cities. 
+			document.getElementById("RunButton").style.border = "black";
 		}
 	});
 	
@@ -272,7 +273,7 @@ function MapUpdate(){
 				.data(myData.features);
 	
 	// Enter Stage
-	
+	group.enter().append("g").attr("d",path);
 	
 	// Update Stage
 	
