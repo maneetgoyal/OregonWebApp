@@ -208,7 +208,7 @@ function myReset(){
 	}
 	
 	// Bringing the Background Image in #myMap
-	document.body.style.background = "url('loading.jpg')";
+	document.getElementById("myMap").style.backgroundImage = "url('loading.jpg')";
 	
 	return 0;
 }
@@ -262,7 +262,7 @@ function RankUpdate(){
 function MapUpdate(){
 	
 	// Removing continer's (#myMap) background-images
-	document.getElementById(myMap).style.backgroundImage = "none";
+	document.getElementById("myMap").style.backgroundImage = "none";
 	
 	// Creating our path generator
 	var path = d3.geoPath(); // Does all the dirty work of translating that mess of GeoJSON coordinates into even messier messes of SVG path codes. {Chimera|Orieley Book}
