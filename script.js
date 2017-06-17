@@ -32,7 +32,7 @@ function settleBodyPadding(){
 function myReadJSON(FileName){
 	
 	// Loading Data
-	d3.json(FileName, function(error,data){
+	d3.json("http://localhost:8000/"+FileName, function(error,data){
 		if(error){
 			console.log(error);
 		}
@@ -262,7 +262,7 @@ function RankUpdate(){
 function MapUpdate(){
 	
 	// Removing continer's (#myMap) background-images
-	document.getElementById(#myMap).style.backgroundImage = "none";
+	document.getElementById(myMap).style.backgroundImage = "none";
 	
 	// Creating our path generator
 	var path = d3.geoPath(); // Does all the dirty work of translating that mess of GeoJSON coordinates into even messier messes of SVG path codes. {Chimera|Orieley Book}
