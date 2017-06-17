@@ -7,6 +7,9 @@ var myData = []; // Containing all data
 function onloadAffairs(){
 	settleBodyPadding();
 	myReadJSON("OregonOut.json");
+	if (document.getElementById("RunButton") != null){
+		document.getElementById("RunButton").disabled = true;
+	}
 	return 0;
 }
 
@@ -133,21 +136,35 @@ function solveLinear(myIDBarFed){
 
 // Function to check for invalid values
 function negativeCheck(){
+	
+	var CheckCount = 0;
+	
 	if (parseFloat(document.getElementById("myEduBox").value) < 0 || parseFloat(document.getElementById("myEduBox").value) > 100){
 		document.getElementById("myEduBox").style.backgroundColor="LightCoral";
+		document.getElementById("RunButton").disabled = true;
 	} else{
 		document.getElementById("myEduBox").style.backgroundColor="white";
+		CheckCount++;
 	}
 	if (parseFloat(document.getElementById("myHealthBox").value) < 0 || parseFloat(document.getElementById("myHealthBox").value) > 100){
 		document.getElementById("myHealthBox").style.backgroundColor="LightCoral";
+		document.getElementById("RunButton").disabled = true;
 	} else{
 		document.getElementById("myHealthBox").style.backgroundColor="white";
+		CheckCount++;
 	}
 	if (parseFloat(document.getElementById("myEmployBox").value) < 0 || parseFloat(document.getElementById("myEmployBox").value) > 100){
 		document.getElementById("myEmployBox").style.backgroundColor="LightCoral";
+		document.getElementById("RunButton").disabled = true;
 	} else{
 		document.getElementById("myEmployBox").style.backgroundColor="white";
+		CheckCount++;
 	}
+	
+	if (CheckCount==3){
+		document.getElementById("RunButton").disabled = false;
+	}
+	
 	return 0;
 }
 
@@ -182,6 +199,10 @@ function myReset(){
 		document.getElementById("NameEntry"+tempIterator).innerHTML = "N/A";
 		document.getElementById("ScoreEntry"+tempIterator).innerHTML = "N/A";
 		tempIterator--;
+	}
+	
+	if (document.getElementById("RunButton") != null){
+		document.getElementById("RunButton").disabled = true;
 	}
 	
 	return 0;
@@ -235,6 +256,12 @@ function RankUpdate(){
 // Function to Update/Create Map
 function MapUpdate(){
 	
+	// Creating our path generator
+	var path = d3.geo.path(); // Does all the dirty work of translating that mess of GeoJSON coordinates into even messier messes of SVG path codes. {Chimera|Orieley Book}
+	
+	// Selecting Projection
+	var projection = d3.geoConicConformal(); // Some input arguments may be needed.
+	
 	// Appending the SVG element to the div type Map Element
 	var canvas = d3.select("#myMap").append("svg")
 					.attr("width",document.getElementById("myMap").style.width)
@@ -243,12 +270,6 @@ function MapUpdate(){
 	// Data Binding Stage
 	var group = canvas.selectAll("g")
 				.data(myData.features);
-				
-	// Selecting Projection
-	var projection = d3.geoConicConformal(); // Some input arguments may be needed.
-	
-	// Creating Path Generator
-	
 	
 	// Enter Stage
 	
@@ -256,7 +277,7 @@ function MapUpdate(){
 	// Update Stage
 	
 	
-	// // Exit Stage
+	// Exit Stage
 	
 	
 				

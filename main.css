@@ -94,6 +94,10 @@ input[type=range]::-ms-thumb {
   	cursor: pointer;
 }
 
+.btn:disabled{
+	cursor: not-allowed;
+}
+
 /* Media queries
 -------------------------------------------------------------------------------*/
 
