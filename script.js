@@ -209,7 +209,7 @@ function myReset(){
 	return 0;
 }
 
-// Function to update results
+// Function to update results. Executed when Run Button is clicked.
 function ResultsUpdate(){
 	RankUpdate();
 	MapUpdate();
@@ -258,7 +258,7 @@ function RankUpdate(){
 function MapUpdate(){
 	
 	// Creating our path generator
-	var path = d3.geo.path(); // Does all the dirty work of translating that mess of GeoJSON coordinates into even messier messes of SVG path codes. {Chimera|Orieley Book}
+	var path = d3.geoPath(); // Does all the dirty work of translating that mess of GeoJSON coordinates into even messier messes of SVG path codes. {Chimera|Orieley Book}
 	
 	// Selecting Projection
 	var projection = d3.geoConicConformal(); // Some input arguments may be needed.
@@ -266,7 +266,7 @@ function MapUpdate(){
 	// Appending the SVG element to the div type Map Element
 	var canvas = d3.select("#myMap").append("svg")
 					.attr("width",document.getElementById("myMap").style.width)
-					.attr("height",document.getElementById("myMap").style.height); // Covering the entire widht and 
+					.attr("height",document.getElementById("myMap").style.height); // Covering the entire width and height of the container div element.
 					
 	// Data Binding Stage
 	var group = canvas.selectAll("g")
