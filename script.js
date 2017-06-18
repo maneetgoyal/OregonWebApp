@@ -264,23 +264,23 @@ function MapUpdate(){
 	// Removing continer's (#myMap) background-images
 	document.getElementById("myMap").style.backgroundImage = "none";
 	
-	// Creating our path generator
-	var path = d3.geoPath(); // Does all the dirty work of translating that mess of GeoJSON coordinates into even messier messes of SVG path codes. {Chimera|Orieley Book}
-	
 	// Selecting Projection
-	var projection = d3.geoConicConformal(); // Some input arguments may be needed.
+	var projection = d3.geoAlbers().scale(50); // Some input arguments may be needed.
+	
+	// Creating our path generator
+	var path = d3.geoPath().projection(projection); // Does all the dirty work of translating that mess of GeoJSON coordinates into even messier messes of SVG path codes. {Chimera|Orieley Book}
 	
 	// Appending the SVG element to the div type Map Element
 	var canvas = d3.select("#myMap").append("svg")
-					.attr("width",document.getElementById("myMap").style.width)
-					.attr("height",document.getElementById("myMap").style.height); // Covering the entire width and height of the container div element.
+					.attr("width",2000)
+					.attr("height",2000); 
 					
 	// Data Binding Stage
-	var group = canvas.selectAll("g")
+	var group = canvas.selectAll("path")
 				.data(myData.features);
 	
 	// Enter Stage
-	group.enter().append("g").attr("d",path);
+	group.enter().append("path").attr("d",path);
 	
 	// Update Stage
 	
