@@ -265,7 +265,11 @@ function MapUpdate(){
 	document.getElementById("myMap").style.backgroundImage = "none";
 	
 	// Selecting Projection
-	var projection = d3.geoAlbers().scale(50); // Some input arguments may be needed.
+	var projection = d3.geoConicConformal()
+						.parallels([44 + 20 / 60, 46]) // NAD83 / Oregon North (EPSG:32126)
+						.rotate([120 + 30 / 60, -43 - 40 / 60]) // https://github.com/veltman/d3-stateplane <==Great Help
+						.scale(0.001)
+						.translate(1000,1000);
 	
 	// Creating our path generator
 	var path = d3.geoPath().projection(projection); // Does all the dirty work of translating that mess of GeoJSON coordinates into even messier messes of SVG path codes. {Chimera|Orieley Book}
