@@ -98,6 +98,12 @@ input[type=range]::-ms-thumb {
 	cursor: not-allowed;
 }
 
+.county{
+	fill: #cccccc;
+	stroke: #333333;
+	stroke-width: 0.5;
+}
+
 /* Media queries
 -------------------------------------------------------------------------------*/
 

@@ -1,5 +1,5 @@
-var extractedMatrix = []; // Global Variable containing extracted matrix: [ID, Name, Major-Cities, Hospitals, Schools, X-Score] for each feature
-var myData = []; // Containing all data
+var extractedMatrix = []; // Global Variable containing extracted matrix: [ID, Name, Major-Cities, Hospitals, Schools, X-Score] for each feature.
+var myData = []; // Containing all data.
 
 // Function for perfoming onload affairs
 // A. Change the top padding of the body to the client height (height + vertical padding) of the Nav-Bar.
@@ -23,8 +23,8 @@ function onresizeAffairs(){
 // Function to change the top padding of the body to the client height (height + vertical padding) of the Nav-Bar.
 function settleBodyPadding(){
 	var Body = document.getElementById("myFullBody");
-	var NavBar = document.getElementById("myNavBar")
-	Body.style.paddingTop = NavBar.clientHeight+10+"px"; // Assigning the top padding to the client height (height + vertical padding) of the Nav-Bar.
+	var NavBar = document.getElementById("myNavBar");
+	Body.style.paddingTop = (NavBar.clientHeight+10)+"px"; // Assigning the top padding to the client height (height + vertical padding) of the Nav-Bar.
 	return 0;
 }
 
@@ -266,10 +266,9 @@ function MapUpdate(){
 	
 	// Selecting Projection
 	var projection = d3.geoConicConformal()
-						.parallels([44 + 20 / 60, 46]) // NAD83 / Oregon North (EPSG:32126)
-						.rotate([120 + 30 / 60, -43 - 40 / 60]) // https://github.com/veltman/d3-stateplane <==Great Help
-						.scale(0.001)
-						.translate(1000,1000);
+						.parallels([43, 45.5]) // NAD83 / Oregon North (EPSG:32126)
+						.rotate([-120.5,41.75]) // https://github.com/veltman/d3-stateplane <==Great Help
+						.scale(0.005);
 	
 	// Creating our path generator
 	var path = d3.geoPath().projection(projection); // Does all the dirty work of translating that mess of GeoJSON coordinates into even messier messes of SVG path codes. {Chimera|Orieley Book}
@@ -279,12 +278,33 @@ function MapUpdate(){
 					.attr("width",2000)
 					.attr("height",2000); 
 					
+	// Defining Color Scale for Chloropleth
+	var color = d3.scaleSequential(d3.interpolatePiYG);
+					
 	// Data Binding Stage
+	console.log(myData.features);
 	var group = canvas.selectAll("path")
-				.data(myData.features);
-	
+				.data(myData.features)
+			    .enter()
+				.append("path")
+				.attr("d",path)
+				.style("fill", function(d) {
+					//Get data value
+					var value = d.properties.Count_2;
+
+					if (value) {
+							//If value exists…
+							return color(value/200);
+					} else {
+							//If value is undefined…
+							return "#ccc";
+					}
+				})
+				.attr("class","county");
+					
+					
 	// Enter Stage
-	group.enter().append("path").attr("d",path);
+	//group
 	
 	// Update Stage
 	
