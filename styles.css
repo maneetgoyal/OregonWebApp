@@ -11,10 +11,22 @@
 
 #myMap{
 	border: 4px solid #ddd;
-	background-image: url("loading.jpg");
-	background-size: contain;
+	background-image: url("upup.png");
 	background-repeat: no-repeat;
 	background-position: center;
+	background-size: 20% auto;
+	height: 60vh; /* 60% of the viewport height will be occupied by this div. */
+}
+
+#myMapSvg{
+	width: 100%;
+	height: 100%;
+}
+
+#myLegends{
+	border-bottom: 4px solid #ddd;
+	border-right: 4px solid #ddd;
+	border-top: 4px solid #ddd;
 	height: 60vh; /* 60% of the viewport height will be occupied by this div. */
 }
 
@@ -100,7 +112,11 @@ input[type=range]::-ms-thumb {
 
 .county{
 	stroke: black;
-	stroke-width: 0.5;
+	stroke-width: 1;
+}
+
+.hidden-xs{
+	font-weight: bold;
 }
 
 /* Media queries
