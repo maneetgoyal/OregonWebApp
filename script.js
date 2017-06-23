@@ -1,5 +1,8 @@
-var extractedMatrix = []; // Global Variable containing extracted matrix: [ID, Name, Major-Cities, Hospitals, Schools, X-Score] for each feature.
+var extractedMatrix = []; // Global Variable containing extracted matrix: [ID, Name, Major-Cities, Hospitals, Schools, X-Score] for each feature. 
+var extractedMatrix_ID = []; // Sorted by Score // [ID, Name, Major-Cities, Hospitals, Schools, X-Score] for each feature.
 var myData = []; // Containing all data.
+var run_click = 0; // No of clicks on run button
+var canvas = []; // Canvas Element to which map paths will be appended.
 
 // Function for perfoming onload affairs
 // A. Change the top padding of the body to the client height (height + vertical padding) of the Nav-Bar.
@@ -54,8 +57,8 @@ function exTracter(ArrayofObjects){
 	var outputMatrix = [];
 	for (var i = 0; i < ArrayofObjects.length; i++){
 		var inputRow = [0,0,0,0,0,0]; // [ID, Name, Major-Cities, Hospitals, Schools, X-Score]
-		inputRow[0] = ArrayofObjects[i].id;
 		var propertyObject = ArrayofObjects[i].properties;
+		inputRow[0] = propertyObject.FID; // Feature ID
 		inputRow[1] = propertyObject.NAME; // Name of the Feature
 		inputRow[2] = propertyObject.Count_; // No. of Major Cities
 		inputRow[3] = propertyObject.Count_1; // No. of Hospitals
@@ -210,6 +213,12 @@ function myReset(){
 	// Bringing the Background Image in #myMap
 	document.getElementById("myMap").style.backgroundImage = "url('loading.jpg')";
 	
+	// Removing SVG Element
+	document.getElementById("mapsvg").remove();
+	
+	// Reseting the number of run button clicks
+	run_click = 0;
+	
 	return 0;
 }
 
@@ -232,6 +241,8 @@ function RankUpdate(){
 		var concernedRow = extractedMatrix[i]; // [ID, Name, Major-Cities, Hospitals, Schools, X-Score]
 		concernedRow[5] = (w1*concernedRow[3] + w2*concernedRow[4] + w3*concernedRow[2])/100; // Updating X-Score. Because by default, X-Score = 0.
 	}
+	
+	extractedMatrix_ID = extractedMatrix; // Copying our extractedMatrix which is already sorted in ascending order of FID (a.k.a. ID)
 	
 	// In-place Sorting in the descencing order of X-Score
 	extractedMatrix.sort(function(a,b){
@@ -256,61 +267,61 @@ function RankUpdate(){
 		tempIterator--;
 	}
 	
+	return 0;
 }
 
 // Function to Update/Create Map
 function MapUpdate(){
 	
+	// Updating no. of run button clicks
+	run_click++;
+	
 	// Removing continer's (#myMap) background-images
 	document.getElementById("myMap").style.backgroundImage = "none";
+		
+	// Setting fitSize
+	var ww = document.getElementById("myMap").clientWidth;
+	var hh = document.getElementById("myMap").clientHeight;	
 	
 	// Selecting Projection
 	var projection = d3.geoConicConformal()
-						.parallels([43, 45.5]) // NAD83 / Oregon North (EPSG:32126)
-						.rotate([-120.5,41.75]) // https://github.com/veltman/d3-stateplane <==Great Help
-						.scale(0.005);
-	
+					   .parallels([44 + 20 / 60, 46])
+                       .rotate([120 + 30 / 60, -43 - 40 / 60]) // https://github.com/veltman/d3-stateplane <==Great Help
+					   .scale(hh*8)
+					   .translate([ww / 2, hh / 1.8]);
+					   
 	// Creating our path generator
 	var path = d3.geoPath().projection(projection); // Does all the dirty work of translating that mess of GeoJSON coordinates into even messier messes of SVG path codes. {Chimera|Orieley Book}
 	
 	// Appending the SVG element to the div type Map Element
-	var canvas = d3.select("#myMap").append("svg")
-					.attr("width",2000)
-					.attr("height",2000); 
-					
-	// Defining Color Scale for Chloropleth
-	var color = d3.scaleSequential(d3.interpolatePiYG);
+	if (run_click == 1){
+		canvas = d3.select("#myMap").append("svg").attr("id","mapsvg");
+	}
+	
+	d3.select("#mapsvg").attr("width",ww).attr("height",hh); // Giving width and height to the map svg element.
 					
 	// Data Binding Stage
-	console.log(myData.features);
 	var group = canvas.selectAll("path")
-				.data(myData.features)
-			    .enter()
-				.append("path")
-				.attr("d",path)
-				.style("fill", function(d) {
-					//Get data value
-					var value = d.properties.Count_2;
-
-					if (value) {
-							//If value exists…
-							return color(value/200);
-					} else {
-							//If value is undefined…
-							return "#ccc";
-					}
-				})
-				.attr("class","county");
-					
+					.data(myData.features);
+				
+	// Color Scale
+	var color = d3.scaleSequential(d3.interpolateSpectral);
 					
 	// Enter Stage
-	//group
-	
+	group.enter()
+		.append("path")
+		.attr("d",path)
+		.attr("class","county");
+
 	// Update Stage
-	
+	canvas.selectAll("path").attr("fill",function(d){
+				var desired_row = extractedMatrix_ID[d.properties.FID];
+				return color(desired_row[5]/extractedMatrix[0][5]);
+			});
 	
 	// Exit Stage
+	canvas.exit().remove();
 	
-	
+	return 0;
 				
 }

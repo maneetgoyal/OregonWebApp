@@ -99,8 +99,7 @@ input[type=range]::-ms-thumb {
 }
 
 .county{
-	fill: #cccccc;
-	stroke: #333333;
+	stroke: black;
 	stroke-width: 0.5;
 }
 
