@@ -41,7 +41,7 @@ function settleBodyPadding(){
 function myReadJSON(FileName){
     
     // Loading Data
-    d3.json(FileName, function(error,data){
+    d3.json("http://localhost:8000/"+FileName, function(error,data){
         if(error){
             console.log(error);
         }
@@ -215,17 +215,15 @@ function myReset(){
     document.getElementById("myMap").style.backgroundImage = "url('upup.png')";
     
     // Removing SVG Element
-    document.getElementById("myMapSvg").remove();
-    document.getElementById("myLegendsSvg").remove();
-
+	if (document.getElementById("myMapSvg") != null){
+		document.getElementById("myMapSvg").remove();
+	}
+    
     // Reseting global variables
-    extractedMatrix = []; // Global Variable containing extracted matrix: [ID, Name, Major-Cities, Hospitals, Schools, X-Score] for each feature. 
-	extractedMatrix_ID = []; // Sorted by Score // [ID, Name, Major-Cities, Hospitals, Schools, X-Score] for each feature.
-	myData = []; // Containing all data.
 	run_click = 0; // No of clicks on run button
 	color = []; // Color Scale
 	canvas = []; // Canvas Element to which map paths will be appended.
-    
+	
     return 0;
 }
 
@@ -238,7 +236,6 @@ function ResultsUpdate(){
 	else {
 		MapUpdate();
 	}
-    
 }
 
 // Function to Update rank
@@ -295,10 +292,6 @@ function MapCreate(){
     // Setting Scaling and Translate for Map
     var ww = document.getElementById("myMap").clientWidth;
     var hh = document.getElementById("myMap").clientHeight;
-	
-	// Setting Scaling and Translate for Legends
-    var wwLegend = document.getElementById("myLegends").clientWidth;
-    var hhLegend = document.getElementById("myLegends").clientHeight;
     
     // Selecting Projection
     var projection = d3.geoConicConformal()
@@ -311,8 +304,8 @@ function MapCreate(){
     var path = d3.geoPath().projection(projection); // Does all the dirty work of translating that mess of GeoJSON coordinates into even messier messes of SVG path codes. {Chimera|Orieley Book}
     
     // Appending the SVG element to the div type Map Element
-    canvas = d3.select("#myMap").append("svg").attr("id","myMapSvg");//.attr("width",ww).attr("height",hh); // Also giving width and height to the map svg element.
-                    
+    canvas = d3.select("#myMap").append("svg").attr("id","myMapSvg");
+	
     // Data Binding Stage
     var group = canvas.selectAll("path")
                     .data(myData.features);	
@@ -333,58 +326,14 @@ function MapCreate(){
                 var desired_row = extractedMatrix_ID[d.properties.FID];
                 return color(desired_row[5]);
             });
-    
+	
     // Exit Stage
     canvas.exit().remove();
-    
-    return 0;
-                
+	
+    return 0;            
 }
 
-function MapUpdate(){
-        
-    // Setting Scaling and Translate for Map
-    var ww = document.getElementById("myMap").clientWidth;
-    var hh = document.getElementById("myMap").clientHeight;
-	console.log(ww);
-	console.log(hh);
-	
-	// Setting Scaling and Translate for Legends
-    var wwLegend = document.getElementById("myLegends").clientWidth;
-    var hhLegend = document.getElementById("myLegends").clientHeight;
-    
-    // Selecting Projection
-    var projection = d3.geoConicConformal()
-                       .parallels([44 + 20 / 60, 46])
-                       .rotate([120 + 30 / 60, -43 - 40 / 60]) // https://github.com/veltman/d3-stateplane <==Great Help
-                       .fitSize([ww,hh],myData.features);
-					   // .scale(hh*8)
-                       // .translate([ww / 2, hh / 1.8]);
-                       
-    // Creating our path generator
-    var path = d3.geoPath().projection(projection); // Does all the dirty work of translating that mess of GeoJSON coordinates into even messier messes of SVG path codes. {Chimera|Orieley Book}
-    
-    // Giving width and height to the map svg element.
-    //d3.select("#myMapSvg").attr("width",ww).attr("height",hh); 
-                    
-    // Data Binding Stage
-    var group = canvas.selectAll("path")
-                    .data(myData.features);	
-            
-    // Enter Stage
-    group.enter()
-        .append("path")
-        .attr("d",path);
-
-    // Update Stage
-    canvas.selectAll("path").attr("fill",function(d){
-                var desired_row = extractedMatrix_ID[d.properties.FID];
-                return color(desired_row[5]);
-            });
-    
-    // Exit Stage
-    canvas.exit().remove();
-    
-    return 0;
-	
+function MapUpdate(){  // Inefficient way of updating map but 'fitSize' doesnt seem to work due to unknown reasons.
+	document.getElementById("myMapSvg").remove();
+	MapCreate();
 }
