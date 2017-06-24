@@ -41,7 +41,7 @@ function settleBodyPadding(){
 function myReadJSON(FileName){
     
     // Loading Data
-    d3.json("http://localhost:8000/"+FileName, function(error,data){
+    d3.json(FileName, function(error,data){
         if(error){
             console.log(error);
         }
