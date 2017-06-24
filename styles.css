@@ -1,5 +1,15 @@
 /* ----MyStyles---- */
 
+#myLegendsTable{
+	display: inline-block;
+	height: 10vh;
+	width: 100%
+}
+
+.table-bordered, .table-bordered th, .table-bordered td{
+	border: 4px solid #ddd !important;
+}
+
 .table td,
 .table th{
 	text-align:center;
@@ -9,25 +19,34 @@
         margin-bottom: 100px !important;
 }
 
-#myMap{
-	border: 4px solid #ddd;
+#myFormulary{
+	display: inline-block;
+}
+
+#myMapArea{
 	background-image: url("upup.png");
 	background-repeat: no-repeat;
 	background-position: center;
-	background-size: 20% auto;
-	height: 60vh; /* 60% of the viewport height will be occupied by this div. */
+	background-size: 10% auto;
+	height: 70vh; /* 60% of the viewport height will be occupied by this div. */
+}
+
+#myMap{
+	border-left: 4px solid #ddd;
+	border-top: 4px solid #ddd;
+	border-right: 4px solid #ddd;
+	height: 50vh; /* 60% of the viewport height will be occupied by this div. */
+}
+
+#myLegends{
+	border-right: 4px solid #ddd;
+	border-top: 4px solid #ddd;
+	height: 50vh; /* 60% of the viewport height will be occupied by this div. */
 }
 
 #myMapSvg, #myLegendsSvg{
 	width: 100%;
 	height: 100%;
-}
-
-#myLegends{
-	border-bottom: 4px solid #ddd;
-	border-right: 4px solid #ddd;
-	border-top: 4px solid #ddd;
-	height: 60vh; /* 60% of the viewport height will be occupied by this div. */
 }
 
 .spaceAdder{
@@ -56,12 +75,8 @@ img{
 	padding-bottom: 10px;
 }
 
-.myJumbotron img{
+#myParameters img{
 	width: 40%;
-}
-
-.myJumbotron{
-	margin-bottom: 40px;
 }
 
 .MenInBlues{
@@ -81,6 +96,10 @@ img{
 .myMethodoBox{
 	border: 1px solid #ddd;
 	color: black;
+}
+
+.bg-info{
+	width: 100% !important;
 }
 
 #myEquation{
@@ -123,6 +142,10 @@ input[type=range]::-ms-thumb {
 	stroke: black;
 	stroke-width: 1px;
 	shape-rendering: crispEdges;
+}
+
+.glyphicon:hover {
+	cursor: pointer;
 }
 
 /* Media queries

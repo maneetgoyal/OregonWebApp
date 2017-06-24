@@ -214,7 +214,7 @@ function myReset(){
     }
     
     // Restoring the Background in #myMap
-    document.getElementById("myMap").style.backgroundImage = "url('upup.png')";
+    document.getElementById("myMapArea").style.backgroundImage = "url('upup.png')";
     
     // Removing Map related SVG Elements
 	if (document.getElementById("myMapSvg") != null){
@@ -226,6 +226,14 @@ function myReset(){
     
     // Reseting global variables
 	run_click = 0; // No of clicks on run button
+	
+	// Updating Legends Table
+	for (var i = 0; i < 5; i++){
+		document.getElementById("ColorCol"+i).style.backgroundColor = "";
+	}
+	for (var i = 0; i < 5; i++){
+		document.getElementById("RangeCol"+i).innerHTML = "";
+	}
 	
     return 0;
 }
@@ -291,7 +299,7 @@ function MapCreate(){
     run_click++;
     
     // Removing container's (#myMap) background-images
-    document.getElementById("myMap").style.backgroundImage = "none";
+    document.getElementById("myMapArea").style.backgroundImage = "none";
     
     // Appending the SVG element to the div type Map Element
     canvas = d3.select("#myMap").append("svg").attr("id","myMapSvg");
@@ -299,12 +307,18 @@ function MapCreate(){
 	// Setting Scaling and Translate for Map
     var ww = document.getElementById("myMapSvg").clientWidth;
     var hh = document.getElementById("myMapSvg").clientHeight;
+	
+	// Adding adjustment for mobile phones
+	var scale_factor = hh*8;
+	if (document.body.clientWidth <= 320){
+		scale_factor = hh*6.5;
+	}
     
     // Selecting Projection
     var projection = d3.geoConicConformal()
                        .parallels([44 + 20 / 60, 46])
                        .rotate([120 + 30 / 60, -43 - 40 / 60]) // https://github.com/veltman/d3-stateplane <==Great Help
-                       .scale(hh*8)
+                       .scale(scale_factor)
                        .translate([ww / 2, hh / 1.8]);
                        
     // Creating our path generator
@@ -342,7 +356,7 @@ function MapUpdate(){  // Inefficient way of updating map but 'fitSize' doesnt s
 	MapCreate();
 }
 
-function LegendsCreate(){
+function LegendsCreate2(){
 	var domain = [1,3,10,20];
 	var range = ["#ff0000", "#ff8000", "#ffff00","#80ff00","#608000"];
 	var textStrings = ["Less than "+domain[0],domain[0]+" to "+domain[1],domain[1]+" to "+domain[2],domain[2]+" to "+domain[3],"More than "+domain[3]];
@@ -389,4 +403,16 @@ function LegendsPosiUpdate(){
 					.attr("class","threshLegends")
 					.attr("transform",function(d,i){return "translate("+0+","+(yOffset+(20*i))+")";})
 	
+}
+
+function LegendsCreate(){
+	var domain = [1,3,10,20];
+	var range = ["#ff0000", "#ff8000", "#ffff00","#80ff00","#608000"];
+	var textStrings = ["Less than "+domain[0],domain[0]+" to "+domain[1],domain[1]+" to "+domain[2],domain[2]+" to "+domain[3],"More than "+domain[3]];
+	for (var i = 0; i < range.length; i++){
+		document.getElementById("ColorCol"+i).style.backgroundColor = range[i];
+	}
+	for (var i = 0; i < textStrings.length; i++){
+		document.getElementById("RangeCol"+i).innerHTML = textStrings[i];
+	}
 }
