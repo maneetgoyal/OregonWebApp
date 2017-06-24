@@ -43,7 +43,7 @@ function settleBodyPadding(){
 function myReadJSON(FileName){
     
     // Loading Data
-    d3.json(FileName, function(error,data){
+    d3.json("http://localhost:8000/"+FileName, function(error,data){
         if(error){
             console.log(error);
         }
@@ -310,7 +310,9 @@ function MapCreate(){
 	
 	// Adding adjustment for mobile phones
 	var scale_factor = hh*8;
-	if (document.body.clientWidth <= 320){
+	if (document.body.clientWidth <= 316){
+		scale_factor = hh*5;
+	} else if (document.body.clientWidth <= 374){
 		scale_factor = hh*6.5;
 	}
     
