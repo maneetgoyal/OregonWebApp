@@ -2,8 +2,6 @@ var extractedMatrix = []; // Global Variable containing extracted matrix: [ID, N
 var extractedMatrix_ID = []; // Sorted by Score // [ID, Name, Major-Cities, Hospitals, Schools, X-Score] for each feature.
 var myData = []; // Containing all data.
 var run_click = 0; // No of clicks on run button
-var color = []; // Color Scale
-var canvas = []; // svg element to which path elements are appended
 
 // Function for perfoming onload affairs
 // A. Change the top padding of the body to the client height (height + vertical padding) of the Nav-Bar.
@@ -25,6 +23,10 @@ function onresizeAffairs(){
 	if (document.getElementById("myMapSvg") != null){
 		MapUpdate();
 	}
+	
+	if (document.getElementById("myLegendsSvg") != null){
+		LegendsPosiUpdate();
+	}
     
     return 0;
 }
@@ -41,7 +43,7 @@ function settleBodyPadding(){
 function myReadJSON(FileName){
     
     // Loading Data
-    d3.json(FileName, function(error,data){
+    d3.json("http://localhost:8000/"+FileName, function(error,data){
         if(error){
             console.log(error);
         }
@@ -214,15 +216,16 @@ function myReset(){
     // Restoring the Background in #myMap
     document.getElementById("myMap").style.backgroundImage = "url('upup.png')";
     
-    // Removing SVG Element
+    // Removing Map related SVG Elements
 	if (document.getElementById("myMapSvg") != null){
 		document.getElementById("myMapSvg").remove();
+	}
+	if (document.getElementById("myLegendsSvg") != null){
+		document.getElementById("myLegendsSvg").remove();
 	}
     
     // Reseting global variables
 	run_click = 0; // No of clicks on run button
-	color = []; // Color Scale
-	canvas = []; // Canvas Element to which map paths will be appended.
 	
     return 0;
 }
@@ -232,6 +235,7 @@ function ResultsUpdate(){
     RankUpdate();
 	if (run_click == 0) {
 		MapCreate();
+		LegendsCreate();
 	}
 	else {
 		MapUpdate();
@@ -288,10 +292,13 @@ function MapCreate(){
     
     // Removing container's (#myMap) background-images
     document.getElementById("myMap").style.backgroundImage = "none";
-        
-    // Setting Scaling and Translate for Map
-    var ww = document.getElementById("myMap").clientWidth;
-    var hh = document.getElementById("myMap").clientHeight;
+    
+    // Appending the SVG element to the div type Map Element
+    canvas = d3.select("#myMap").append("svg").attr("id","myMapSvg");
+	
+	// Setting Scaling and Translate for Map
+    var ww = document.getElementById("myMapSvg").clientWidth;
+    var hh = document.getElementById("myMapSvg").clientHeight;
     
     // Selecting Projection
     var projection = d3.geoConicConformal()
@@ -302,9 +309,6 @@ function MapCreate(){
                        
     // Creating our path generator
     var path = d3.geoPath().projection(projection); // Does all the dirty work of translating that mess of GeoJSON coordinates into even messier messes of SVG path codes. {Chimera|Orieley Book}
-    
-    // Appending the SVG element to the div type Map Element
-    canvas = d3.select("#myMap").append("svg").attr("id","myMapSvg");
 	
     // Data Binding Stage
     var group = canvas.selectAll("path")
@@ -336,4 +340,53 @@ function MapCreate(){
 function MapUpdate(){  // Inefficient way of updating map but 'fitSize' doesnt seem to work due to unknown reasons.
 	document.getElementById("myMapSvg").remove();
 	MapCreate();
+}
+
+function LegendsCreate(){
+	var domain = [1,3,10,20];
+	var range = ["#ff0000", "#ff8000", "#ffff00","#80ff00","#608000"];
+	var textStrings = ["Less than "+domain[0],domain[0]+" to "+domain[1],domain[1]+" to "+domain[2],domain[2]+" to "+domain[3],"More than "+domain[3]];
+	var datos = [];
+	for (var i = 0; i < range.length; i++){
+		datos.push([range[i],textStrings[i]]);
+	}	
+	var canvas = d3.select("#myLegends").append("svg").attr("id","myLegendsSvg");
+	
+	var yOffset = ((document.getElementById("myLegendsSvg").clientHeight/2)-40-10);
+	
+	// Data Binding Stage
+    var legendos = canvas.selectAll(".threshLegends")
+                    .data(datos)
+					.enter()
+					.append("g")
+					.attr("class","threshLegends")
+					.attr("transform",function(d,i){return "translate("+0+","+(yOffset+(20*i))+")";})
+	
+	var rectos = legendos
+					.append("rect")
+					.attr("width",20)
+					.attr("height",20)
+					.attr("class","legendRects")
+					.attr("fill",function(d){return d[0];});
+					
+	var textos = legendos
+					.append("text")
+					.attr("class","legendTexts")
+					.attr("x", 22)
+					.attr("y", 10)
+					.attr("dy", ".35em")
+					.text(function(d) { return d[1]; });							
+					
+}
+
+function LegendsPosiUpdate(){
+	
+	var yOffset = ((document.getElementById("myLegendsSvg").clientHeight/2)-40-10);
+	
+	var canvas = d3.select("#myLegendsSvg")
+	
+	var legendos = canvas.selectAll(".threshLegends")
+					.attr("class","threshLegends")
+					.attr("transform",function(d,i){return "translate("+0+","+(yOffset+(20*i))+")";})
+	
 }
