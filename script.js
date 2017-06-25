@@ -2,12 +2,16 @@ var extractedMatrix = []; // Global Variable containing extracted matrix: [ID, N
 var extractedMatrix_ID = []; // Sorted by Score // [ID, Name, Major-Cities, Hospitals, Schools, X-Score] for each feature.
 var myData = []; // Containing all data.
 var run_click = 0; // No of clicks on run button
+var divTip = [];
 
 // Function for perfoming onload affairs
 // A. Change the top padding of the body to the client height (height + vertical padding) of the Nav-Bar.
 // B. Load json Data
 function onloadAffairs(){
     settleBodyPadding();
+	divTip = d3.select("body").append("div") // Creating Tool-Tip Container
+				.attr("class", "tooltip")				
+				.style("opacity", 0);
     myReadJSON("OregonOut.json");
     if (document.getElementById("RunButton") != null){
         document.getElementById("RunButton").disabled = true;
@@ -263,14 +267,18 @@ function RankUpdate(){
         var concernedRow = extractedMatrix[i]; // [ID, Name, Major-Cities, Hospitals, Schools, X-Score]
         concernedRow[5] = (w1*concernedRow[3] + w2*concernedRow[4] + w3*concernedRow[2])/100; // Updating X-Score. Because by default, X-Score = 0.
     }
-    
-    extractedMatrix_ID = extractedMatrix; // Copying our extractedMatrix which is already sorted in ascending order of FID (a.k.a. ID)
-    
+	
     // In-place Sorting in the descencing order of X-Score
     extractedMatrix.sort(function(a,b){
         return b[5]-a[5];
     });
     // console.log(extractedMatrix);
+	
+	// In-place Sorting our extractedMatrix in ascending order of FID (a.k.a. ID)
+	extractedMatrix_ID = extractedMatrix.slice(); // Recovering extractedMatrix_ID with updated X-Scores
+	extractedMatrix_ID.sort(function(a,b){ // Sorting in ascending order of ID.
+		return a[0]-b[0];
+    });
     
     // Updating Rank Table (innerHTML of table elements)
     
@@ -326,7 +334,7 @@ function MapCreate(){
     // Creating our path generator
     var path = d3.geoPath().projection(projection); // Does all the dirty work of translating that mess of GeoJSON coordinates into even messier messes of SVG path codes. {Chimera|Orieley Book}
 	
-    // Data Binding Stage
+	// Data Binding Stage
     var group = canvas.selectAll("path")
                     .data(myData.features);	
 		
@@ -339,7 +347,20 @@ function MapCreate(){
     group.enter()
         .append("path")
         .attr("d",path)
-        .attr("class","county");
+        .attr("class","county")
+		.on("mouseover", function(d) {		
+            divTip.transition()		
+                .duration(200)		
+                .style("opacity", .7);		
+            divTip.html(d.properties.NAME + "<br/>"  + "X-Score: " + extractedMatrix_ID[d.properties.FID][5].toFixed(2))	
+                .style("left", (d3.event.pageX) + "px")		
+                .style("top", (d3.event.pageY - 32) + "px");	
+            })					
+        .on("mouseout", function(d) {		
+            divTip.transition()		
+                .duration(500)		
+                .style("opacity", 0);	
+        });
 
     // Update Stage
     canvas.selectAll("path").attr("fill",function(d){
