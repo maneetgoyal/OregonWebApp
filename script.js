@@ -28,9 +28,10 @@ function onresizeAffairs(){
 		MapUpdate();
 	}
 	
-	if (document.getElementById("myLegendsSvg") != null){
-		LegendsPosiUpdate();
-	}
+	// Below section is commented because we are using legends embedded in columns instead of in svg.
+	// if (document.getElementById("myLegendsSvg") != null){
+		// LegendsPosiUpdate();
+	// }
     
     return 0;
 }
@@ -221,29 +222,21 @@ function myReset(){
     document.getElementById("myMapArea").style.backgroundImage = "url('upup.png')";
     
     // Removing Map related SVG Elements
-	if (document.getElementById("myMapSvg") != null){
-		
-		// Fix for IE Browser. These browsers do not support remove() method on HTML Elements. As of June 26 2017.
-		if (typeof document.getElementById("myMapSvg").remove() == 'function'){ // i.e. if support is found
-			document.getElementById("myMapSvg").remove();
-		} 
-		else { // using jQuery functionality
-			$("myMapSvg").remove();
-		}
-		
-	}
+	// if (document.getElementById("myMapSvg") != null){
+		// document.getElementById("myMapSvg").remove();
+	// }
 	
-	// Removing Map related SVG Elements
-	if (document.getElementById("myLegendsSvg") != null){
-		
-		// Fix for IE Browser. These browsers do not support remove() method on HTML Elements. As of June 26 2017.
-		if (typeof document.getElementById("myLegendsSvg").remove() == 'function'){ // i.e. if support is found
-			document.getElementById("myLegendsSvg").remove();
-		} 
-		else { // using jQuery functionality
-			$("myLegendsSvg").remove();
-		}
-		
+	// if (document.getElementById("myLegendsSvg") != null){
+		// document.getElementById("myLegendsSvg").remove();
+	// }
+	
+	//^^Aliter of the above commented chunk of code-->>
+	
+	// Since IE Browsers dont support remove() method
+	if (document.getElementById("myMapSvg") != null){
+		var parento = document.getElementById("myMap");
+		var childo = document.getElementById("myMapSvg");
+		parento.removeChild(childo);
 	}
     
     // Reseting global variables
@@ -394,12 +387,15 @@ function MapCreate(){
 
 function MapUpdate(){  // Inefficient way of updating map but 'fitSize' doesnt seem to work due to unknown reasons.
     
+	// if (document.getElementById("myMapSvg") != null){
+		// document.getElementById("myMapSvg").remove();
+	// }
+	
 	// Fix for IE Browser. These browsers do not support remove() method on HTML Elements. As of June 26 2017.
-	if (typeof document.getElementById("myMapSvg").remove() == 'function'){ // i.e. if support is found
-		document.getElementById("myMapSvg").remove();
-	} 
-	else { // using jQuery functionality
-		$("myMapSvg").remove();
+	if (document.getElementById("myMapSvg") != null){
+		var parento = document.getElementById("myMap");
+		var childo = document.getElementById("myMapSvg");
+		parento.removeChild(childo);
 	}
 	
 	MapCreate();
