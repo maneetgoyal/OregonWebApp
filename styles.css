@@ -18,7 +18,7 @@
 	background-repeat: no-repeat;
 	background-position: center;
 	background-size: 10% auto;
-	min-height: 70vh; /* 60% of the viewport height will be occupied by this div. */
+	overflow: auto;
 }
 
 #myMap{
