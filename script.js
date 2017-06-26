@@ -222,10 +222,28 @@ function myReset(){
     
     // Removing Map related SVG Elements
 	if (document.getElementById("myMapSvg") != null){
-		document.getElementById("myMapSvg").remove();
+		
+		// Fix for IE Browser. These browsers do not support remove() method on HTML Elements. As of June 26 2017.
+		if (typeof document.getElementById("myMapSvg").remove() == 'function'){ // i.e. if support is found
+			document.getElementById("myMapSvg").remove();
+		} 
+		else { // using jQuery functionality
+			$("myMapSvg").remove();
+		}
+		
 	}
+	
+	// Removing Map related SVG Elements
 	if (document.getElementById("myLegendsSvg") != null){
-		document.getElementById("myLegendsSvg").remove();
+		
+		// Fix for IE Browser. These browsers do not support remove() method on HTML Elements. As of June 26 2017.
+		if (typeof document.getElementById("myLegendsSvg").remove() == 'function'){ // i.e. if support is found
+			document.getElementById("myLegendsSvg").remove();
+		} 
+		else { // using jQuery functionality
+			$("myLegendsSvg").remove();
+		}
+		
 	}
     
     // Reseting global variables
@@ -375,8 +393,17 @@ function MapCreate(){
 }
 
 function MapUpdate(){  // Inefficient way of updating map but 'fitSize' doesnt seem to work due to unknown reasons.
-	document.getElementById("myMapSvg").remove();
+    
+	// Fix for IE Browser. These browsers do not support remove() method on HTML Elements. As of June 26 2017.
+	if (typeof document.getElementById("myMapSvg").remove() == 'function'){ // i.e. if support is found
+		document.getElementById("myMapSvg").remove();
+	} 
+	else { // using jQuery functionality
+		$("myMapSvg").remove();
+	}
+	
 	MapCreate();
+	
 }
 
 function LegendsCreate2(){
