@@ -382,15 +382,25 @@ function MapCreate(){
             });
 	
     // Exit Stage
-    canvas.exit().remove();
+    canvas.exit().remove(); // Not really needed here because # DOM Elements = # Data Elements even on updating inputs.
 	
 	
 	// Zoom and Pan
-	canvas.call(d3.zoom().scaleExtent([1,4]).on("zoom", function() {
-		canvas.attr("transform", d3.event.transform);
-	}));
+	// canvas.call(d3.zoom().scaleExtent([1,2]).translateExtent([[-50,-50],[ww+50,hh+50]]).on("zoom", function() {
+		// canvas.attr("transform", d3.event.transform);
+	// }));
 	
-    return 0;            
+	// Zoom and Pan
+	zoomListener = d3.zoom().scaleExtent([1,2]).translateExtent([[-50,-50],[ww+50,hh+50]]).on("zoom",zoomed); // Defining a Zoom Listener as a global variable
+	
+	// Attaching the zoom listener to the concerned DOM element
+    canvas.call(zoomListener);
+	
+	return 0;            
+}
+
+function zoomed(){ // Function is called when zoom/pan event takes place
+	canvas.attr("transform", d3.event.transform);
 }
 
 function MapUpdate(){  // Inefficient way of updating map but 'fitSize' doesnt seem to work due to unknown reasons.
@@ -471,6 +481,6 @@ function LegendsCreate(){
 	}
 }
 
-function myRestoreZoom(){	
-	canvas.attr("transform", d3.zoomIdentity);
+function myRestoreZoom(){
+	canvas.transition().duration(750).call(zoomListener.transform, d3.zoomIdentity);
 }
