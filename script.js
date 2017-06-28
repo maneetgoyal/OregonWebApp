@@ -2,7 +2,9 @@ var extractedMatrix = []; // Global Variable containing extracted matrix: [ID, N
 var extractedMatrix_ID = []; // Sorted by Score // [ID, Name, Major-Cities, Hospitals, Schools, X-Score] for each feature.
 var myData = []; // Containing all data.
 var run_click = 0; // No of clicks on run button
-var divTip = [];
+var divTip = []; // tooltip containing map data
+var canvas = []; // svg element to which paths are appended
+var scale_factor = 1; // For map
 
 // Function for perfoming onload affairs
 // A. Change the top padding of the body to the client height (height + vertical padding) of the Nav-Bar.
@@ -321,14 +323,14 @@ function MapCreate(){
     document.getElementById("myMapArea").style.backgroundImage = "none";
     
     // Appending the SVG element to the div type Map Element
-    canvas = d3.select("#myMap").append("svg").attr("id","myMapSvg");
+    canvas = d3.select("#myMap").append("svg").attr("id","myMapSvg").append("g");
 	
 	// Setting Scaling and Translate for Map
     var ww = document.getElementById("myMapSvg").clientWidth;
     var hh = document.getElementById("myMapSvg").clientHeight;
 	
 	// Adding adjustment for mobile phones
-	var scale_factor = hh*8;
+	scale_factor = hh*8;
 	if (document.body.clientWidth <= 316){
 		scale_factor = hh*5;
 	} else if (document.body.clientWidth <= 374){
@@ -362,8 +364,8 @@ function MapCreate(){
 		.on("mouseover", function(d) {		
             divTip.transition()		
                 .duration(200)		
-                .style("opacity", .7);		
-            divTip.html(d.properties.NAME + "<br/>"  + "X-Score: " + extractedMatrix_ID[d.properties.FID][5].toFixed(2))	
+                .style("opacity", .8);		
+            divTip.html(d.properties.NAME + "<br>"  + "X-Score: " + extractedMatrix_ID[d.properties.FID][5].toFixed(2))	
                 .style("left", (d3.event.pageX) + "px")		
                 .style("top", (d3.event.pageY - 32) + "px");	
             })					
@@ -381,6 +383,12 @@ function MapCreate(){
 	
     // Exit Stage
     canvas.exit().remove();
+	
+	
+	// Zoom and Pan
+	canvas.call(d3.zoom().scaleExtent([1,4]).on("zoom", function() {
+		canvas.attr("transform", d3.event.transform);
+	}));
 	
     return 0;            
 }
@@ -461,4 +469,12 @@ function LegendsCreate(){
 	for (var i = 0; i < textStrings.length; i++){
 		document.getElementById("RangeCol"+i).innerHTML = textStrings[i];
 	}
+}
+
+var zoomListener = d3.zoom().scaleExtent([1,4]).on("zoom", function() {
+		canvas.attr("transform", d3.event.transform);
+	});
+
+function myRestoreZoom(){
+	canvas.transition().duration(750).call(zoomListener.tranform,d3.zoomIdentity.translate(document.getElementById("myMapSvg").clientWidth/2,document.getElementById("myMapSvg").clientHeight/1.8).scale(scale_factor));
 }

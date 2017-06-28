@@ -26,6 +26,7 @@
 	border-top: 4px solid #ddd;
 	border-right: 4px solid #ddd;
 	height: 50vh; /* 60% of the viewport height will be occupied by this div. */
+	padding: 0;
 }
 
 #myLegends{
@@ -157,6 +158,12 @@ div.tooltip {
 	border-radius: 8px;           
 	pointer-events: none;
 	color: white;
+}
+
+#myHomeGlyphi{
+	position: absolute;
+	right: 0px;
+	margin: 4px;
 }
 
 /* Media queries
