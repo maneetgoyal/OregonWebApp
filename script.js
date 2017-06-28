@@ -471,10 +471,6 @@ function LegendsCreate(){
 	}
 }
 
-var zoomListener = d3.zoom().scaleExtent([1,4]).on("zoom", function() {
-		canvas.attr("transform", d3.event.transform);
-	});
-
-function myRestoreZoom(){
-	canvas.transition().duration(750).call(zoomListener.tranform,d3.zoomIdentity.translate(document.getElementById("myMapSvg").clientWidth/2,document.getElementById("myMapSvg").clientHeight/1.8).scale(scale_factor));
+function myRestoreZoom(){	
+	canvas.attr("transform", d3.zoomIdentity);
 }
