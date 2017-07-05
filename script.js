@@ -484,3 +484,79 @@ function LegendsCreate(){
 function myRestoreZoom(){
 	canvas.transition().duration(750).call(zoomListener.transform, d3.zoomIdentity);
 }
+
+// Function to Export the Map as a png file along with the Legends
+function Exporter(){
+	if (document.getElementById("myMapSvg")){
+		var SVGnode = document.getElementById("myMap");
+		var wid = SVGnode.getBoundingClientRect().width;
+		var hei = SVGnode.getBoundingClientRect().height;
+		PNGhandler("#myMapSvg",wid,hei);
+	}
+	
+}
+
+// Function: computed to inline CSS for Path Elements
+function applyStyle(cloned) {
+
+	// Contains all the cloned paths
+	var AllClonedPaths = (cloned.getElementsByTagName("path"));
+
+	// Contains all the original paths
+	var AllOriginalPaths = (document.getElementsByTagName("path"));
+	
+	for (var i = 0; i < AllClonedPaths.length; i++){
+		
+		var OriginalPathStyles = getComputedStyle(AllOriginalPaths[i]); // Getting the copmuted style of concerned original path
+		
+		for (var key in OriginalPathStyles){
+			AllClonedPaths[i].style[key] = OriginalPathStyles[key]; // Transferring the style properties to the concenred cloned path
+		}
+		
+	}
+	
+	return cloned; // Returning the cloned grandparent containing the cloned paths
+    
+}
+
+// Function that converts SVG to PNG
+function PNGhandler(SVGelement,width,height){
+	
+	var svg = document.querySelector(SVGelement); // Getting the Element Node
+	var cloned = svg.cloneNode(true); // Cloning the SVG Element because its children style will be in-lined.
+	cloned.id = "myMapSvg_Cloned"; // Assigned a new ID. Without doing this, we will have two elements with same ID.
+	
+	// Converting computed style to inline style for Path Elements
+	cloned = applyStyle(cloned);
+	
+	var svgData = new XMLSerializer().serializeToString(cloned); // XMLSerializer can be used to convert a DOM subtree or DOM document into text. 
+
+	var canvas = document.createElement("canvas"); // Creating Canvas Element
+	canvas.setAttribute("width",width); // Setting Attribute for Canvas Element
+	canvas.setAttribute("height",height); // Setting Attribute for Canvas Element
+	var ctx = canvas.getContext("2d"); //  HTMLCanvasElement.getContext() method returns a drawing context on the canvas
+	// "2d", leading to the creation of a CanvasRenderingContext2D object representing a two-dimensional rendering context.
+	
+	var img = new Image(); // Creating Image Element
+	
+	// Setting Image Source
+	img.src = "data:image/svg+xml;base64," + btoa(unescape(encodeURIComponent(svgData))); // Defining Source for the Image
+	//  WindowOrWorkerGlobalScope.btoa() method creates a base-64 encoded ASCII string from a String object in which each character in the string is treated as a byte of binary data.
+
+	img.onload = function() { // Once the image loads, execute this anonymous function
+    ctx.drawImage( img, 0, 0 ); // Second and Third Parameters denote Position (x,y) within the canvas element
+    
+    var urlURL = canvas.toDataURL( "image/png" ); // returns a data URI containing a representation of the image in the format specified by the type parameter
+	// (defaults to PNG). The returned image is in a resolution of 96 dpi.
+	
+	var a = document.createElement("a"); // Creating a Link Element
+	document.body.appendChild(a);
+	a.download = SVGelement.slice(1, SVGelement.length)+".png"; // Assigning value to the download attribute(file name).
+	//The download property sets or returns the value of the download attribute of a link.
+	//The download attribute specifies that the target will be downloaded when a user clicks on the hyperlink.
+	
+	a.href = urlURL; // Assigning desired URL to the link (anchor)
+	a.click(); // Simulating a Mouse Click
+	}
+}
+
