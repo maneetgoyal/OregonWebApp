@@ -487,12 +487,29 @@ function myRestoreZoom(){
 
 // Function to Export the Map as a png file along with the Legends
 function Exporter(){
+	
+	// Exporting Map
 	if (document.getElementById("myMapSvg")){
 		var SVGnode = document.getElementById("myMap");
 		var wid = SVGnode.getBoundingClientRect().width;
 		var hei = SVGnode.getBoundingClientRect().height;
 		PNGhandler("#myMapSvg",wid,hei);
 	}
+
+	// Exporting Legends
+	html2canvas(document.getElementById("myLegendsTable"), {
+	  onrendered: function(canvas) {
+		  
+		var urlURL = canvas.toDataURL("image/png",1); // returns a data URI containing a representation of the image in the format specified by the type parameter.
+		
+		var a = document.createElement("a"); // Creating a Link Element
+		a.download = "myLegendsTable.png"; // Assigning value to the download attribute(file name).
+		
+		a.href = urlURL; // Assigning desired URL to the link (anchor)
+		a.click(); // Simulating a Mouse Click
+		
+	  }
+	});
 	
 }
 
@@ -505,14 +522,12 @@ function applyStyle(cloned) {
 	// Contains all the original paths
 	var AllOriginalPaths = (document.getElementsByTagName("path"));
 	
-	for (var i = 0; i < AllClonedPaths.length; i++){
-		
+	for (var i = 0; i < AllClonedPaths.length; i++){	
 		var OriginalPathStyles = getComputedStyle(AllOriginalPaths[i]); // Getting the copmuted style of concerned original path
 		
 		for (var key in OriginalPathStyles){
 			AllClonedPaths[i].style[key] = OriginalPathStyles[key]; // Transferring the style properties to the concenred cloned path
 		}
-		
 	}
 	
 	return cloned; // Returning the cloned grandparent containing the cloned paths
@@ -546,11 +561,11 @@ function PNGhandler(SVGelement,width,height){
 	img.onload = function() { // Once the image loads, execute this anonymous function
     ctx.drawImage( img, 0, 0 ); // Second and Third Parameters denote Position (x,y) within the canvas element
     
-    var urlURL = canvas.toDataURL( "image/png" ); // returns a data URI containing a representation of the image in the format specified by the type parameter
+    var urlURL = canvas.toDataURL("image/png",1.0); // returns a data URI containing a representation of the image in the format specified by the type parameter
 	// (defaults to PNG). The returned image is in a resolution of 96 dpi.
 	
 	var a = document.createElement("a"); // Creating a Link Element
-	document.body.appendChild(a);
+	// document.body.appendChild(a); // No need to append
 	a.download = SVGelement.slice(1, SVGelement.length)+".png"; // Assigning value to the download attribute(file name).
 	//The download property sets or returns the value of the download attribute of a link.
 	//The download attribute specifies that the target will be downloaded when a user clicks on the hyperlink.
@@ -559,4 +574,3 @@ function PNGhandler(SVGelement,width,height){
 	a.click(); // Simulating a Mouse Click
 	}
 }
-
