@@ -494,11 +494,11 @@ function Exporter(){
 		var wid = SVGnode.getBoundingClientRect().width;
 		var hei = SVGnode.getBoundingClientRect().height;
 		PNGhandler("#myMapSvg",wid,hei);
-	}
-
-	// Exporting Legends
-	html2canvas(document.getElementById("myLegendsTable"), {
-	  onrendered: function(canvas) {
+		
+		
+		// Exporting Legends
+	html2canvas(document.getElementById("myLegendsTable"), { // HTML2Canvas is used instead of our own function, PNGHandler because of some issues in setting image source for text/html data. It appears that text/html data doesnt trigger the onload function.  
+	    onrendered: function(canvas) {
 		  
 		var urlURL = canvas.toDataURL("image/png",1); // returns a data URI containing a representation of the image in the format specified by the type parameter.
 		
@@ -510,6 +510,11 @@ function Exporter(){
 		
 	  }
 	});
+		
+	}
+	
+
+	
 	
 }
 
