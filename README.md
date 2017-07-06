@@ -10,5 +10,3 @@ Implementation of Mapping features of D3.js and web technologies like HTML5, CSS
 1. App tested succesfully on IE11, MS Edge, Chrome
 2. Tested succesfully for responsiveness on mobile screens as well.
 3. Map doesn't show on Firefox. Will be looking into it.
-4. Working on Export Button functionality. It shall store the snapshot of the map window (including legends).
-
